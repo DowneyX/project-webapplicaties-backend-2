@@ -90,5 +90,23 @@ class ApiController extends AbstractController
         return new JsonResponse($response, 200, [], true);
     }
 
+    #[Route('api/stations/measurements/{timestamp}', name: 'stations-measurements')]
+    public function measurement(string $timestamp): Response
+    {
+        $apiKey = "LbNcA4tamBAuYFEPireeHR4IGL4MU4HqG4WvJPViDOBWr62x2aGLHsID63TMOnxTEjXO1W28RfnupnXU1sWCnglVivJ7wdWGhjLOA3izrfeB3N5KXmXdUJh0bytCA9ZK";
+        $url = "localhost:9000/api/contract/station/measurements/$timestamp";
+        
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "API-key: $apiKey"
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return new JsonResponse($response, 200, [], true);
+    }
+
 
 }
