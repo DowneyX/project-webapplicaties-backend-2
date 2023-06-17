@@ -90,5 +90,40 @@ class ApiController extends AbstractController
         return new JsonResponse($response, 200, [], true);
     }
 
+    #[Route('api/top10/airpressure/{date}', name: 'airpressure-date')]
+    public function top10Airpressure(string $date): Response
+    {
+        $apiKey = "1ef1ea94158a22838989ec0dfdbd6b14101ff575e9f189499ab2a00a20611857480810b64e5d43526a5c9692e974a369a1f3bd63ec959b9f6cf7e9152572b103";
+        $url = "localhost:9000/api/contract/all/measurements";
 
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "API-key: $apiKey"
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        $data = json_decode($response, true);
+
+        $specificDate = "2023-04-05";
+        $filteredData = [];
+
+        foreach ($data as $item) {
+            $timestamp = $item['timestamp']['date'];
+            if (strpos($timestamp, $specificDate) === 0) {
+                $filteredData[] = $item;
+            }
+        }
+
+        usort($filteredData, function ($a, $b) {
+            return $b['station_air_pressure'] <=> $a['station_air_pressure'];
+        });
+
+        $top10Data = array_slice($filteredData, 0, 10);
+
+        $filteredJsonData = json_encode($top10Data, JSON_PRETTY_PRINT);
+        return new JsonResponse($filteredJsonData, 200, [], true);
+    }
 }
