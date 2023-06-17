@@ -72,11 +72,12 @@ class ApiController extends AbstractController
         return new JsonResponse($response, 200, [], true);
     }
 
-    #[Route('api/stations/mogadishu-1500km/station/{id}', name: 'station-mogadishu')]
-    public function mogadishuStation(int $id): Response
+    // veranderen van apiKey
+    #[Route('api/stations/mogadishu-1500km/stationss/{date}', name: 'stationss-mogadishu')]
+    public function mogadishuStationss(string $date): Response
     {
         $apiKey = "03bc5dea28605aa505733f5a5e271ba40982272a3db743d898dc1455e158e04496c98c0d9aaf7cc6782aabba0f804600e5449793988d09d7263800f92f70da04";
-        $url = "localhost:9000/api/contract/station/$id/measurements";
+        $url = "localhost:9000/api/contract/station/$date/measurementss";
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -89,24 +90,4 @@ class ApiController extends AbstractController
 
         return new JsonResponse($response, 200, [], true);
     }
-
-    #[Route('api/stations/measurements/{timestamp}', name: 'stations-measurements')]
-    public function measurement(string $timestamp): Response
-    {
-        $apiKey = "LbNcA4tamBAuYFEPireeHR4IGL4MU4HqG4WvJPViDOBWr62x2aGLHsID63TMOnxTEjXO1W28RfnupnXU1sWCnglVivJ7wdWGhjLOA3izrfeB3N5KXmXdUJh0bytCA9ZK";
-        $url = "localhost:9000/api/contract/station/measurements/$timestamp";
-        
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [
-            "API-key: $apiKey"
-        ]);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        return new JsonResponse($response, 200, [], true);
-    }
-
-
 }
