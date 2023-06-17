@@ -107,12 +107,11 @@ class ApiController extends AbstractController
 
         $data = json_decode($response, true);
 
-        $specificDate = "2023-04-05";
         $filteredData = [];
 
         foreach ($data as $item) {
             $timestamp = $item['timestamp']['date'];
-            if (strpos($timestamp, $specificDate) === 0) {
+            if (strpos($timestamp, $date) === 0) {
                 $filteredData[] = $item;
             }
         }
